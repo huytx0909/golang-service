@@ -9,7 +9,7 @@ import (
 type CarDAO interface {
 	GetAll() (cars []models.Car, err error)
 	GetCarById(id int) (car models.Car, err error)
-	//CreateCar(carDTO dtos.CarDTO) (err error)
+	CreateCar(car models.Car) (err error)
 	//UpdateCar(id int, carDTO dtos.CarDTO) (err error)
 	//DeleteCarById(id int) (err error)
 }
@@ -33,5 +33,10 @@ func (carDAO *CarDAOImpl) GetAll() (cars []models.Car, err error) {
 
 func (carDAO *CarDAOImpl) GetCarById(id int) (car models.Car, err error) {
 	carDAO.db.First(&car, id)
+	return
+}
+
+func (carDAO *CarDAOImpl) CreateCar(car models.Car) (err error) {
+	carDAO.db.Create(&car)
 	return
 }

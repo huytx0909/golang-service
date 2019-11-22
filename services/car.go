@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hello/daos"
 	"hello/dtos"
+	"hello/models"
 	"hello/transformers"
 )
 
@@ -11,10 +12,16 @@ type CarService interface {
 	//TransformToCarDTO(car models.Car) (carDTO dtos.CarDTO)
 	GetAll() (carsDTO []dtos.CarDTO, err error)
 	GetCarById(id int) (carDTO dtos.CarDTO, err error)
+	CreateCar(carDTO dtos.CarDTO) (err error)
 }
 
 type CarServiceImpl struct {
 	CarDAO daos.CarDAOImpl
+}
+
+func NewCarService(carDAOImpl daos.CarDAOImpl) (carService CarServiceImpl) {
+	carService.CarDAO = carDAOImpl
+	return carService
 }
 
 func (carService CarServiceImpl) GetAll() (carsDTO []dtos.CarDTO, err error) {
@@ -40,7 +47,16 @@ func (carService CarServiceImpl) GetCarById(id int) (carDTO dtos.CarDTO, err err
 	return
 }
 
-func NewCarService(carDAOImpl daos.CarDAOImpl) (carService CarServiceImpl) {
-	carService.CarDAO = carDAOImpl
-	return carService
+func (carService CarServiceImpl) CreateCar(carDTO dtos.CarDTO) (err error) {
+	car := models.Car{
+		Owner:          carDTO.Owner,
+		Color:          carDTO.Color,
+		NumberOfWheels: carDTO.NumberOfWheels,
+	}
+
+	err = carService.CarDAO.CreateCar(car)
+	if err != nil {
+		fmt.Println("cannot create car" + err.Error())
+	}
+	return
 }

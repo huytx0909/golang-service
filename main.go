@@ -65,7 +65,7 @@ func NewCarApplication() {
 
 	v1 := router.Group("/api/v1/car")
 	{
-		//v1.POST("/", createCar)
+		v1.POST("/", controller.CreateCar)
 		v1.GET("/", controller.GetAll)
 		v1.GET("/:id", controller.GetCarById)
 		//v1.PUT("/:id", updateCarById)

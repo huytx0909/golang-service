@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"hello/dtos"
 	"hello/services"
 	"net/http"
 	"strconv"
@@ -57,3 +58,25 @@ func (carController *CarController) GetCarById(c *gin.Context) {
 	})
 }
 
+func (carController *CarController) CreateCar(c *gin.Context) {
+	carDTO := new(dtos.CarDTO)
+	err := c.BindJSON(carDTO)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": err.Error(),
+		})
+		return
+	}
+	err = carController.CarServiceImpl.CreateCar(*carDTO)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": http.StatusOK,
+	})
+}
