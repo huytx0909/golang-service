@@ -47,7 +47,6 @@ func main() {
 	}
 	defer m.Close()
 
-
 }
 
 func NewCarApplication() {
@@ -68,8 +67,8 @@ func NewCarApplication() {
 		v1.POST("/", controller.CreateCar)
 		v1.GET("/", controller.GetAll)
 		v1.GET("/:id", controller.GetCarById)
-		//v1.PUT("/:id", updateCarById)
-		//v1.DELETE("/:id", deleteCarById)
+		v1.PUT("/:id", controller.UpdateCarById)
+		v1.DELETE("/:id", controller.DeleteCarById)
 	}
 	router.Run()
 }

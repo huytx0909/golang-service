@@ -1,11 +1,13 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"hello/dtos"
-	"hello/services"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+
+	"hello/dtos"
+	"hello/services"
 )
 
 type CarController struct {
@@ -17,6 +19,7 @@ func NewCarController(carService services.CarServiceImpl) (carController CarCont
 	return
 }
 
+// Get all cars
 func (carController *CarController) GetAll(c *gin.Context) {
 	cars, err := carController.CarServiceImpl.GetAll()
 	if err != nil {
@@ -32,6 +35,7 @@ func (carController *CarController) GetAll(c *gin.Context) {
 	})
 }
 
+// Get car by id
 func (carController *CarController) GetCarById(c *gin.Context) {
 	id := c.Param("id")
 	idInt, err := strconv.Atoi(id)
@@ -58,6 +62,7 @@ func (carController *CarController) GetCarById(c *gin.Context) {
 	})
 }
 
+// Create car
 func (carController *CarController) CreateCar(c *gin.Context) {
 	carDTO := new(dtos.CarDTO)
 	err := c.BindJSON(carDTO)
@@ -76,7 +81,68 @@ func (carController *CarController) CreateCar(c *gin.Context) {
 		})
 		return
 	}
+	c.JSON(http.StatusCreated, gin.H{
+		"status": http.StatusCreated,
+	})
+}
+
+// Delete car by id
+func (carController *CarController) DeleteCarById(c *gin.Context) {
+	id := c.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	err = carController.CarServiceImpl.DeleteCarById(idInt)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": err.Error(),
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": http.StatusOK,
+	})
+}
+
+// Update car by id
+func (carController *CarController) UpdateCarById(c *gin.Context) {
+	id := c.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	carDTO := dtos.CarDTO{}
+	err = c.BindJSON(&carDTO)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	err = carController.CarServiceImpl.UpdateCarById(uint(idInt), carDTO)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, gin.H{
+		"status": http.StatusAccepted,
 	})
 }

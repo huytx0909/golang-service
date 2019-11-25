@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+
 	"hello/daos"
 	"hello/dtos"
 	"hello/models"
@@ -9,10 +10,11 @@ import (
 )
 
 type CarService interface {
-	//TransformToCarDTO(car models.Car) (carDTO dtos.CarDTO)
 	GetAll() (carsDTO []dtos.CarDTO, err error)
 	GetCarById(id int) (carDTO dtos.CarDTO, err error)
 	CreateCar(carDTO dtos.CarDTO) (err error)
+	DeleteCarById(id int) (err error)
+	UpdateCarById(id uint, carDTO dtos.CarDTO) (err error)
 }
 
 type CarServiceImpl struct {
@@ -57,6 +59,27 @@ func (carService CarServiceImpl) CreateCar(carDTO dtos.CarDTO) (err error) {
 	err = carService.CarDAO.CreateCar(car)
 	if err != nil {
 		fmt.Println("cannot create car" + err.Error())
+	}
+	return
+}
+
+func (carService CarServiceImpl) DeleteCarById(id int) (err error) {
+	err = carService.CarDAO.DeleteCarById(id)
+	if err != nil {
+		fmt.Println("cannot delete in service")
+	}
+	return
+}
+
+func (carService CarServiceImpl) UpdateCarById(id uint, carDTO dtos.CarDTO) (err error) {
+	carModel := models.Car{
+		Owner:          carDTO.Owner,
+		Color:          carDTO.Color,
+		NumberOfWheels: carDTO.NumberOfWheels,
+	}
+	err = carService.CarDAO.UpdateCarById(id, carModel)
+	if err != nil {
+		fmt.Println("cannot update in service")
 	}
 	return
 }
