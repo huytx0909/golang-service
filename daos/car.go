@@ -53,7 +53,7 @@ func (carDAO *CarDAOImpl) DeleteCarById(id int) (err error) {
 	return
 }
 
-func (carDAO *CarDAOImpl) UpdateCarById(id uint, newCar models.Car) (err error) {
+func (carDAO *CarDAOImpl) UpdateCarById(id int, newCar models.Car) (err error) {
 	car := models.Car{}
 	carDAO.db.First(&car, id)
 	if car.ID == 0 {

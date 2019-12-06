@@ -55,10 +55,10 @@ func NewCarApplication() {
 	carDAO := daos.NewCarDAO(db)
 
 	// Init Services
-	carService := services.NewCarService(carDAO)
+	carService := services.NewCarService(&carDAO)
 
 	// Init Controllers
-	controller := controllers.NewCarController(carService)
+	controller := controllers.NewCarController(&carService)
 
 	router := gin.Default()
 

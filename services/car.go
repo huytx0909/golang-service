@@ -14,15 +14,15 @@ type CarService interface {
 	GetCarById(id int) (carDTO dtos.CarDTO, err error)
 	CreateCar(carDTO dtos.CarDTO) (err error)
 	DeleteCarById(id int) (err error)
-	UpdateCarById(id uint, carDTO dtos.CarDTO) (err error)
+	UpdateCarById(id int, carDTO dtos.CarDTO) (err error)
 }
 
 type CarServiceImpl struct {
-	CarDAO daos.CarDAOImpl
+	CarDAO daos.CarDAO
 }
 
-func NewCarService(carDAOImpl daos.CarDAOImpl) (carService CarServiceImpl) {
-	carService.CarDAO = carDAOImpl
+func NewCarService(carDAO daos.CarDAO) (carService CarServiceImpl) {
+	carService.CarDAO = carDAO
 	return carService
 }
 
@@ -71,7 +71,7 @@ func (carService CarServiceImpl) DeleteCarById(id int) (err error) {
 	return
 }
 
-func (carService CarServiceImpl) UpdateCarById(id uint, carDTO dtos.CarDTO) (err error) {
+func (carService CarServiceImpl) UpdateCarById(id int, carDTO dtos.CarDTO) (err error) {
 	carModel := models.Car{
 		Owner:          carDTO.Owner,
 		Color:          carDTO.Color,

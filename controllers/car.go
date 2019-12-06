@@ -11,17 +11,17 @@ import (
 )
 
 type CarController struct {
-	CarServiceImpl services.CarServiceImpl
+	CarService services.CarService
 }
 
-func NewCarController(carService services.CarServiceImpl) (carController CarController) {
-	carController.CarServiceImpl = carService
+func NewCarController(carService services.CarService) (carController CarController) {
+	carController.CarService = carService
 	return
 }
 
 // Get all cars
 func (carController *CarController) GetAll(c *gin.Context) {
-	cars, err := carController.CarServiceImpl.GetAll()
+	cars, err := carController.CarService.GetAll()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
@@ -47,7 +47,7 @@ func (carController *CarController) GetCarById(c *gin.Context) {
 		return
 	}
 
-	car, err := carController.CarServiceImpl.GetCarById(idInt)
+	car, err := carController.CarService.GetCarById(idInt)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -73,7 +73,7 @@ func (carController *CarController) CreateCar(c *gin.Context) {
 		})
 		return
 	}
-	err = carController.CarServiceImpl.CreateCar(*carDTO)
+	err = carController.CarService.CreateCar(*carDTO)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
@@ -98,7 +98,7 @@ func (carController *CarController) DeleteCarById(c *gin.Context) {
 		return
 	}
 
-	err = carController.CarServiceImpl.DeleteCarById(idInt)
+	err = carController.CarService.DeleteCarById(idInt)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -134,7 +134,7 @@ func (carController *CarController) UpdateCarById(c *gin.Context) {
 		return
 	}
 
-	err = carController.CarServiceImpl.UpdateCarById(uint(idInt), carDTO)
+	err = carController.CarService.UpdateCarById(idInt, carDTO)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
